@@ -1,5 +1,5 @@
 import { prisma } from "../config/prisma.js";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { comparePassword, hashPassword } from "../utils/password.utils.js";
 import { signToken } from "../utils/jwt.utils.js";
 import { success, error } from "../utils/response.utils.js";
@@ -36,4 +36,27 @@ export const login = async (req: Request, res: Response) => {
     token,
     user: { id: user.id, email: user.email, role: user.role },
   });
+};
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    res.cookie("jwt", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Only sends over HTTPS in production
+      sameSite: "strict", // Protects against CSRF attacks
+      path: "/", // Ensure it clears for the whole domain
+      expires: new Date(0), // Set the cookie to expire
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
 };
