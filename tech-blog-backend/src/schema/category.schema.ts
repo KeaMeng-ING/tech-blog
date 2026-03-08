@@ -48,6 +48,3 @@ export const updateCategorySchema = z.object({
       message: "At least one field must be provided for update",
     }),
 });
-
-export type CreateCategoryInput = z.infer<typeof createCategorySchema>["body"];
-export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>["body"];
