@@ -7,6 +7,7 @@ import categoryRouter from "./routes/category.routes.js";
 import userRouter from "./routes/user.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 import githubRouter from "./routes/github.routes.js";
+import newsRouter from "./routes/newsletter.routes.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,6 +21,7 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/users", userRouter);
 app.use("/api/subscription", subscriptionRouter);
 app.use("/api/github", githubRouter);
+app.use("/api/admin", newsRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port http://localhost:${port}`);
