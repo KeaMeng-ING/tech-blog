@@ -9,9 +9,14 @@ export default function Home() {
       <header className="flex items-center justify-between px-10 md:px-16 py-4 border-b border-white/10">
         
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          {/* need to replace logo later */}
-          <span className="text-xl font-bold text-purple-400 font-heading">TECH BLOG</span> 
+        <div className="flex items-center gap-3">
+          <Image
+            src="/unofficial_logo.png"
+            alt="Tech Blog Logo"
+            width={150}
+            height={150}
+            className="object-contain"
+          />
         </div>
 
         {/* Navigation */}
