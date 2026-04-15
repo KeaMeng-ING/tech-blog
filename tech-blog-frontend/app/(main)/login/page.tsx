@@ -4,12 +4,15 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Mail, Lock } from "lucide-react"
+import Toast from "../../components/Toast"
 
 export default function LoginPage() {
     const router = useRouter()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    // const [error, setError] = useState("")
+    const [error, setError] = useState<string | string[]>("")
 
     const handleLogin = async () => {
         try {
@@ -24,7 +27,7 @@ export default function LoginPage() {
         const data = await res.json()
 
         if (!data.success) {
-            alert(data.message)
+            setError(data.message)
             return
         }
 
@@ -41,6 +44,11 @@ export default function LoginPage() {
     }
 
     return (
+        <>
+        {error && (
+            <Toast message={error} onClose={() => setError("")} />
+        )}
+        
         <div className="min-h-screen grid md:grid-cols-2 bg-[#0B1120] text-white">
 
             {/* LEFT */}
@@ -120,6 +128,7 @@ export default function LoginPage() {
                         Sign In
                     </button>
 
+
                     {/* REGISTER LINK */}
                     <p className="text-gray-400 text-sm mt-6 text-center">
                         Don’t have an account?{" "}
@@ -130,6 +139,6 @@ export default function LoginPage() {
 
                 </div>
             </div>
-        </div>
+        </div></>
   )
 }

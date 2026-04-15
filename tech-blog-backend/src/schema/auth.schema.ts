@@ -8,7 +8,7 @@ export const registerSchema = z.object({
       .string()
       .trim() // Removes accidental spaces
       .min(1, "Email is required")
-      .email("Please enter a valid work email")
+      .email("Please enter a valid email")
       .toLowerCase(),
 
     password: z
@@ -24,7 +24,7 @@ export const loginSchema = z.object({
       .string()
       .trim() // Removes accidental spaces
       .min(1, "Email is required")
-      .email("Please enter a valid work email")
+      .email("Please enter a valid email")
       .toLowerCase(),
 
     password: z.string().min(1, "Password is required"),

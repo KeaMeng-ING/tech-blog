@@ -4,42 +4,48 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Mail, Lock, User } from "lucide-react"
+import Toast from "../../components/Toast"
 
 export default function RegisterPage() {
-  const router = useRouter()
+    const router = useRouter()
 
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState<string | string[]>("")
 
-  const handleRegister = async () => {
+    const handleRegister = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      })
+        const res = await fetch("http://localhost:3000/api/auth/register", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, email, password }),
+        })
 
-      const data = await res.json()
+        const data = await res.json()
 
-      if (!data.success) {
-        alert(data.message)
-        return
-      }
+        if (!data.success) {
+                setError(data.message)
+                return
+        }
 
-      localStorage.setItem("token", data.data.token)
-      localStorage.setItem("user", JSON.stringify(data.data.user))
+        localStorage.setItem("token", data.data.token)
+        localStorage.setItem("user", JSON.stringify(data.data.user))
 
-      router.push("/")
-    } catch (err) {
-      console.error(err)
-      alert("Something went wrong")
+        router.push("/")
+    }   catch (err) {
+        console.error(err)
+        alert("Something went wrong")
     }
-  }
+}
 
-  return (
+return (
+    <>
+    {error && (
+        <Toast message={error} onClose={() => setError("")} />
+    )}
     
     <div className="min-h-screen grid md:grid-cols-2 bg-[#0B1120] text-white">
 
@@ -142,6 +148,6 @@ export default function RegisterPage() {
 
             </div>
         </div>
-    </div>
+    </div></>
   )
 }

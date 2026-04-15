@@ -71,20 +71,16 @@ export default function Navbar() {
 
                         {/* Dropdown */}
                         {open && (
-                        <div className="absolute right-0 mt-3 w-40 bg-[#0F172A] border border-white/10 rounded-xl shadow-lg p-2">
+                            <div className="absolute right-0 mt-3 w-40 bg-[#0F172A] border border-white/10 rounded-xl shadow-lg p-2">
 
-                            <button
-                            onClick={() => {
-                                localStorage.removeItem("token")
-                                localStorage.removeItem("user")
-                                window.location.reload()
-                            }}
-                            className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 transition"
-                            >
-                            Logout
-                            </button>
+                                <Link
+                                href="/logout"
+                                className="block w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 transition"
+                                >
+                                Logout
+                                </Link>
 
-                        </div>
+                            </div>
                         )}
                     </div>
                     ) : (
