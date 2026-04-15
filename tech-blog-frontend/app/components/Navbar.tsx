@@ -44,7 +44,7 @@ export default function Navbar() {
                 <Link href="/articles" className="hover:text-white transition">Articles</Link>
                 <Link href="/repos" className="hover:text-white transition">Github Repos</Link>
                 <Link href="/newsletter" className="hover:text-white transition">Newsletter</Link>
-                <Link href="/about" className="hover:text-white transition">About</Link>
+                <Link href="/about" className="hover:text-white transition">About Us</Link>
             </nav>
 
             {/* Right side */}
@@ -92,5 +92,5 @@ export default function Navbar() {
                 )}
             </div>
         </header>
-  )
+    )
 }
