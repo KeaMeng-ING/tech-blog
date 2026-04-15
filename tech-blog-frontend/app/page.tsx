@@ -21,66 +21,6 @@ export default async function Home() {
 
     <main className="min-h-screen bg-[#0B0F19] text-white">
 
-      {/* ╭┈➤ HEADER */}
-      <header className="flex items-center justify-between px-10 md:px-16 py-4 border-b border-white/10">
-        
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <Image
-            src="/unofficial_logo.png"
-            alt="Tech Blog Logo"
-            width={150}
-            height={150}
-            className="object-contain"
-          />
-        </div>
-
-        {/* Navigation */}
-        <nav className="hidden md:flex gap-8 text-gray-300 items-center">
-          <a href="#" className="hover:text-white">AI</a>
-          <a href="#" className="hover:text-white">Cloud</a>
-          <a href="#" className="hover:text-white">Web</a>
-          <a href="#" className="hover:text-white">Security</a>
-
-          {/* 'More' Dropdown */}
-          <div className="relative group z-50">
-            <button className="flex items-center gap-1 hover:text-white transition">
-              More <ChevronDown size={16} />
-            </button>
-
-            {/* Dropdown */}
-            {/* <div className="absolute top-full mt-3 w-56 bg-[#111827] border border-white/10 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"> */}
-            <div className="absolute top-full mt-3 w-56 bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div className="p-3 space-y-2 text-sm">
-                <a href="#" className="block px-3 py-2 rounded-lg hover:bg-white/10">
-                  Newsletter
-                </a>
-
-                <a href="#" className="block px-3 py-2 rounded-lg hover:bg-white/10">
-                  Trending Repos
-                </a>
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        {/* Right side */}
-        <div className="flex items-center gap-4">
-
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search articles..."
-            className="hidden md:block px-4 py-2 rounded-full bg-white/10 text-sm focus:outline-none"
-          />
-
-          {/* Sign In */}
-          <button className="px-4 py-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500">
-            Sign In
-          </button>
-        </div>
-      </header>
-
       {/* ╭┈➤ HERO SECTION */}
       <section className="grid md:grid-cols-[1.4fr_1fr] gap-12 px-12 md:px-20 py-16 items-stretch">
 

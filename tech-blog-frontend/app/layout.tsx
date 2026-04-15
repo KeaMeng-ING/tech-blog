@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css"
 import { Inter, Space_Grotesk } from "next/font/google"
+import Navbar from "../components/admin/Navbar"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,6 +13,7 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space",
 })
 
+
 export default function RootLayout({
   children,
 }: {
@@ -19,7 +21,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
+      <body className={`${inter.variable} ${spaceGrotesk.variable} bg-[#0B1120] text-white`}>
+        <Navbar />
         {children}
       </body>
     </html>
