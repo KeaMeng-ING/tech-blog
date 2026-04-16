@@ -61,7 +61,7 @@ export default async function Home() {
           <p className="text-gray-400 mt-5 text-lg max-w-xl">
             Meta's latest architectural shift introduces self-correcting
             reasoning loops that outperform traditional transformer
-            models by 40%. The era of passive AI is over.
+            models<br/> by 40%. The era of passive Artificial Intelligence is over.
           </p>
 
           {/* Buttons */}

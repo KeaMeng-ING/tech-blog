@@ -30,12 +30,13 @@ export default function Navbar() {
         <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0B1120]/70 border-b border-white/10 flex items-center justify-between px-10 md:px-16 py-4">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/home" className="flex items-center gap-3">
                 <Image
                 src="/unofficial_logo.png"
                 alt="Tech Blog Logo"
                 width={140}
                 height={140}
+                className="h-10 w-auto object-contain"
                 />
             </Link>
 
