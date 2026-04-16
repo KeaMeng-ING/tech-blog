@@ -42,7 +42,7 @@ export default function Navbar() {
             {/* Navigation */}
             <nav className="hidden md:flex gap-8 text-gray-300 items-center">
                 <Link href="/articles" className="hover:text-white transition">Articles</Link>
-                <Link href="/repos" className="hover:text-white transition">Github Repos</Link>
+                <Link href="/github" className="hover:text-white transition">Github Repos</Link>
                 <Link href="/newsletter" className="hover:text-white transition">Newsletter</Link>
                 <Link href="/about" className="hover:text-white transition">About Us</Link>
             </nav>
