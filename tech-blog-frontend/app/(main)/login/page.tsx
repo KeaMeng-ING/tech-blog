@@ -36,7 +36,7 @@ export default function LoginPage() {
         localStorage.setItem("user", JSON.stringify(data.data.user))
 
         // Redirect to home page
-        router.push("/")
+        router.push("/home")
         } catch (err) {
         console.error(err)
         alert("Login failed")

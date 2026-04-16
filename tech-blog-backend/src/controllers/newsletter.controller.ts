@@ -40,7 +40,7 @@ export const manualSend = async (req: Request, res: Response) => {
     const posts = await prisma.post.findMany({
       where: {
         status: "PUBLISHED",
-        category: { slug: { in: topics } }, // ✅ use slug instead of name
+        category: { slug: { in: topics } }, // use slug instead of name
       },
       take: 10,
       orderBy: { publishedAt: "desc" },

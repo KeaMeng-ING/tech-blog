@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 
 async function getTrendingRepos() {
@@ -167,6 +168,41 @@ export default async function Home() {
             ))}
 
           </div>
+        </div>
+
+      </section>
+
+
+      {/* ╭┈➤ NEWSLETTER */}
+      <section className="px-10 md:px-20 py-20">
+
+        <div className="rounded-3xl 
+                        bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500
+                        border border-white/20
+                        shadow-[0_0_80px_rgba(168,85,247,0.25)]
+                        p-10 md:p-16 text-center">
+
+          {/* Title */}
+          <h2 className="text-3xl md:text-4xl font-heading font-semibold text-white mb-4">
+            Stay Updated with the Latest Tech News!
+          </h2>
+
+          {/* Subtitle */}
+          <p className="text-white/80 max-w-2xl mx-auto mb-8 text-sm md:text-base">
+            Subscribe to our newsletter and get daily updates on AI, Cloud Computing,<br/> Web Development, 
+            and more delivered to your inbox.
+          </p>
+
+          {/* Subscribe Button */}
+          <a
+            href="/newsletter"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl 
+                      bg-white text-black font-medium 
+                      hover:scale-105 hover:bg-gray-100 transition"
+          >
+            Subscribe Now →
+          </a>
+
         </div>
 
       </section>
