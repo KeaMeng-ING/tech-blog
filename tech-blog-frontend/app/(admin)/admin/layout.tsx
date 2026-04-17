@@ -22,7 +22,7 @@ export default function AdminLayout({
     const token = getToken();
     const user = getUser();
     if (!token || user?.role !== "ADMIN") {
-      router.replace("/login");
+      router.replace("/admin/login");
     }
   }, [pathname, isLoginPage, router]);
 

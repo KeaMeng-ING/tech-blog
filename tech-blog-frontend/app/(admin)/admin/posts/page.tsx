@@ -57,7 +57,7 @@ export default function PostsPage() {
           <p style={{ color: "#6b7280", margin: 0, fontSize: "14px" }}>Editorial control center for all platform content.</p>
         </div>
         <Link
-          href="/admin/posts/create"
+          href="/admin/create"
           style={{
             background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
             color: "white",
