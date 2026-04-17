@@ -1,9 +1,17 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/api";
+import { authService } from "@/services/auth.service";
 
 export default function Header() {
   const user = getUser();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    router.push("/admin/login");
+  };
 
   return (
     <header
@@ -51,64 +59,9 @@ export default function Header() {
         </span>
       </div>
 
-      {/* Search */}
-      <div style={{ position: "relative", width: "300px" }}>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#6b7280"
-          strokeWidth="2"
-          style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}
-        >
-          <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-        <input
-          placeholder="Global System Search..."
-          style={{
-            width: "100%",
-            background: "#13131f",
-            border: "1px solid #1e1e35",
-            borderRadius: "8px",
-            padding: "8px 12px 8px 36px",
-            color: "#9ca3af",
-            fontSize: "13px",
-            outline: "none",
-            boxSizing: "border-box",
-          }}
-        />
-      </div>
 
       {/* Right */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-        <button
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "#9ca3af",
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-          <span
-            style={{
-              position: "absolute",
-              top: "-4px",
-              right: "-4px",
-              width: "8px",
-              height: "8px",
-              background: "#7c3aed",
-              borderRadius: "50%",
-            }}
-          />
-        </button>
 
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div style={{ textAlign: "right" }}>
@@ -133,6 +86,29 @@ export default function Header() {
           >
             {user?.email?.[0]?.toUpperCase() || "A"}
           </div>
+          <button
+            onClick={handleLogout}
+            style={{
+              background: "rgba(239,68,68,0.1)",
+              border: "1px solid rgba(239,68,68,0.2)",
+              borderRadius: "8px",
+              padding: "6px 12px",
+              color: "#f87171",
+              fontSize: "11px",
+              fontWeight: 600,
+              cursor: "pointer",
+              letterSpacing: "0.5px",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </button>
         </div>
       </div>
     </header>
