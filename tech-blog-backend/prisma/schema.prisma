@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -13,24 +7,13 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum PostStatus {
-  DRAFT
-  SCHEDULED
-  PUBLISHED
-}
-
 model User {
   id            String         @id @default(cuid())
   email         String         @unique
+  createdAt     DateTime       @default(now())
+  isDisabled    Boolean        @default(false)
   password      String
   role          Role           @default(USER)
-  isDisabled    Boolean        @default(false)
-  createdAt     DateTime       @default(now())
   subscriptions Subscription[]
 }
 
@@ -63,11 +46,11 @@ model Subscription {
   id           String   @id @default(cuid())
   email        String
   userId       String
-  user         User     @relation(fields: [userId], references: [id])
   topics       String[]
   deliveryTime String
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model NewsletterLog {
@@ -76,4 +59,101 @@ model NewsletterLog {
   totalSent Int
   status    String
   sentAt    DateTime @default(now())
+}
+
+model content_feed {
+  id                      Int       @id @default(autoincrement())
+  title                   String?
+  link                    String?
+  url                     String?
+  description             String?
+  source                  String
+  author                  String?
+  authors                 String?
+  creator                 String?
+  dc_creator              String?
+  full_text               String?
+  full_content            String?
+  content                 String?
+  content_snippet         String?
+  content_encoded         String?
+  content_encoded_snippet String?
+  image                   String?
+  main_image              String?
+  enclosure               String?
+  pub_date                String?
+  publish_date            DateTime? @db.Timestamptz(6)
+  created_at              DateTime? @db.Timestamptz(6)
+  iso_date                String?
+  guid                    String?
+  categories              Json?
+  comments                String?
+  repository              String?
+  total_stars             Int?
+  total_forks             Int?
+  inserted_at             DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model content_scraping {
+  id                     Int       @id @default(autoincrement())
+  source                 String?
+  title                  String?
+  link                   String?
+  url                    String?
+  description            String?
+  author                 String?
+  authors                String?
+  creator                String?
+  dc_creator             String?   @map("dc:creator")
+  full_text              String?
+  full_content           String?
+  content                String?
+  contentSnippet         String?
+  content_encoded        String?   @map("content:encoded")
+  content_encodedSnippet String?   @map("content:encodedSnippet")
+  image                  String?
+  main_image             String?
+  enclosure              Json?
+  pubDate                String?
+  publish_date           String?
+  created_at             DateTime? @db.Timestamptz(6)
+  isoDate                String?
+  guid                   String?
+  categories             String[]
+  comments               String?
+  repository             String?
+  Total_Star             Int?
+  Total_Folk             Int?
+  insertedAt             DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model news_articles_automation {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String?
+  content      String?
+  full_content String?
+  image        String?
+  link         String?   @unique(map: "idx_news_automation_link")
+  author       String?
+  date         DateTime? @db.Timestamptz(6)
+  categories   String?
+  source       String?
+  total_stars  Int?
+  total_forks  Int?
+  stars_today  Int?
+  language     String?
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at(sort: Desc)], map: "idx_news_created_at")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
 }
