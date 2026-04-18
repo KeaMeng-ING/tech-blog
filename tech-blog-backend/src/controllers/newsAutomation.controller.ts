@@ -45,3 +45,46 @@ export const getSingleNews = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: "Error fetching article" })
   }
 }
+
+// Search
+export const getSearchNews = async (req: Request, res: Response) => {
+  try {
+    const { search } = req.query
+
+    const news = await prisma.news_articles_automation.findMany({
+      where: search
+        ? {
+            OR: [
+              {
+                title: {
+                  contains: String(search),
+                  mode: "insensitive",
+                },
+              },
+              {
+                content: {
+                  contains: String(search),
+                  mode: "insensitive",
+                },
+              },
+              {
+                source: {
+                  contains: String(search),
+                  mode: "insensitive",
+                },
+              },
+            ],
+          }
+        : {},
+      orderBy: { date: "desc" },
+    })
+
+    res.json({
+      success: true,
+      data: news,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ success: false, message: "Server error" })
+  }
+}

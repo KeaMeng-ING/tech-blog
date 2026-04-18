@@ -11,12 +11,23 @@ async function getTrendingRepos() {
   return json.data
 }
 
+async function getLatestNews() {
+  const res = await fetch("http://localhost:3000/api/news-automation", {
+    cache: "no-store",
+  })
+
+  const data = await res.json()
+  return data.data || []
+}
+
 export default async function Home() {
 
   const repos = await getTrendingRepos()
+  const news = await getLatestNews()
 
   const featured = repos[0]
   const others = repos.slice(1, 5)
+  const latestNews = news.slice(0,6)
 
   return (
 
@@ -62,14 +73,16 @@ export default async function Home() {
           <p className="text-gray-400 mt-5 text-lg max-w-xl">
             Meta's latest architectural shift introduces self-correcting
             reasoning loops that outperform traditional transformer
-            models<br/> by 40%. The era of passive Artificial Intelligence is over.
+            models by 40%. The era of passive Artificial Intelligence is over.
           </p>
 
           {/* Buttons */}
           <div className="flex gap-4 mt-6">
-            <button className="px-6 py-3 rounded-full bg-purple-500 hover:bg-purple-600">
-              Read More →
-            </button>
+            <Link href="/articles">
+              <button className="px-6 py-3 rounded-full bg-purple-500 hover:bg-purple-600">
+                Read More →
+              </button>
+            </Link>
 
             <button className="px-6 py-3 rounded-full border border-white/20 hover:bg-white/10 hover:border-white/40 transition">
               Save for Later
@@ -173,11 +186,87 @@ export default async function Home() {
       </section>
 
 
+      {/* ╭┈➤ LATEST NEWS PREVIEW */}
+      <section className="mt-20 px-10 md:px-16">
+
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-4xl font-heading font-bold">Latest News</h2>
+
+          <Link
+            href="/articles"
+            className="text-sm text-blue-400 hover:underline"
+          >
+            View More →
+          </Link>
+        </div>
+
+        {/* Grid 3 each, 2 rows */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+          {latestNews.map((article: any) => (
+            <div
+              key={article.id}
+              className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 
+                        rounded-2xl overflow-hidden flex flex-col
+                        hover:scale-[1.02] hover:border-blue-400/30 transition"
+            >
+
+              {/* Image */}
+              <img
+                src={article.image || "/news-placeholder-home.jpg"}
+                alt={article.title}
+                className="w-full h-[160px] object-cover"
+              />
+
+              <div className="p-5 flex flex-col justify-between flex-1">
+
+                {/* Meta */}
+                <div className="text-xs text-gray-400 mb-2">
+                  {article.source}
+                  {article.source && article.date && " • "}
+                  {article.date &&
+                    new Date(article.date).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                </div>
+
+                {/* Title */}
+                <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
+                  {article.title}
+                </h3>
+
+                {/* Preview */}
+                <p className="text-gray-400 text-sm line-clamp-3">
+                  {article.content
+                    ?.replace(/<[^>]+>/g, "")
+                    .slice(0, 100)}
+                  ...
+                </p>
+
+                {/* Button */}
+                <Link
+                  href={`/news/${article.id}`}
+                  className="mt-4 text-sm text-blue-400 hover:underline"
+                >
+                  Read →
+                </Link>
+
+              </div>
+            </div>
+          ))}
+
+        </div>
+      </section>
+
+
       {/* ╭┈➤ NEWSLETTER */}
       <section className="px-10 md:px-20 py-20">
 
         <div className="rounded-3xl 
-                        bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500
+                        bg-gradient-to-r from-black-500 via-indigo-400 to-black-500
                         border border-white/20
                         shadow-[0_0_80px_rgba(168,85,247,0.25)]
                         p-10 md:p-16 text-center">

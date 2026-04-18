@@ -28,9 +28,8 @@ export const getNewsletterHistory = async (_: Request, res: Response) => {
 // POST /api/admin/newsletter/send (manual send)
 export const manualSend = async (req: Request, res: Response) => {
   try {
-    const { topics, userIds } = req.body;
+    const { topics } = req.body;
 
-    // topics are slugs e.g. ["web-development", "devops"]
     // Get subscribers for selected topics (slugs match DB)
     const subs = await prisma.subscription.findMany({
       where: { isActive: true, topics: { hasSome: topics } },
@@ -40,7 +39,7 @@ export const manualSend = async (req: Request, res: Response) => {
     const posts = await prisma.post.findMany({
       where: {
         status: "PUBLISHED",
-        category: { slug: { in: topics } }, // use slug instead of name
+        category: { slug: { in: topics } },
       },
       take: 10,
       orderBy: { publishedAt: "desc" },
