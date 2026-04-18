@@ -4,11 +4,26 @@ import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { User } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function Navbar() {
     const [user, setUser] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [open, setOpen] = useState(false)
+
+    const [query, setQuery] = useState("")
+    const router = useRouter()
+
+    const handleSearch = () => {
+        if (!query.trim()) return
+        router.push(`/search?q=${query}`)
+    }
+
+    const handleKeyDown = (e: any) => {
+        if (e.key === "Enter") {
+        handleSearch()
+        }
+    }
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user")
@@ -42,8 +57,9 @@ export default function Navbar() {
 
             {/* Navigation */}
             <nav className="hidden md:flex gap-8 text-gray-300 items-center">
+                <Link href="/home" className="hover:text-white transition">Home</Link>
                 <Link href="/articles" className="hover:text-white transition">Articles</Link>
-                <Link href="/github" className="hover:text-white transition">Github Repos</Link>
+                <Link href="/github" className="hover:text-white transition">Repos</Link>
                 <Link href="/newsletter" className="hover:text-white transition">Newsletter</Link>
                 <Link href="/about" className="hover:text-white transition">About Us</Link>
             </nav>
@@ -55,7 +71,10 @@ export default function Navbar() {
                 <input
                 type="text"
                 placeholder="Search articles..."
-                className="hidden md:block px-4 py-2 rounded-full bg-white/10 text-sm focus:outline-none"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-sm"
                 />
 
                 {/* Auth */}
