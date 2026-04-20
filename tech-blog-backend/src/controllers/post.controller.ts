@@ -7,7 +7,7 @@ export const getPosts = async (req: Request, res: Response) => {
   const { category, status, search, page = 1, limit = 10 } = req.query;
 
   const where: any = {};
-  if (category) where.category = { slug: category };
+  if (category) where.category = { slug: (category as string).toLowerCase().replace(/\s+/g, "-") };
   if (status) where.status = status;
   if (search) where.title = { contains: search as string, mode: "insensitive" };
 

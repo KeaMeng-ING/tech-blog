@@ -6,7 +6,6 @@ import { prisma } from "../config/prisma.js";
 export const subscribe = async (req: Request, res: Response) => {
   const { email, topics, deliveryTime } = req.body;
   const userId = req.user.id;
-  if (!userId) return error(res, "User must be authenticated", 401);
 
   const sub = await prisma.subscription.create({
     data: { email, topics, deliveryTime, userId },
