@@ -1,3 +1,5 @@
+'use client';
+
 export default function AboutPage() {
   return (
     <div className="px-10 md:px-16 py-10">

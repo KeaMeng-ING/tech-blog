@@ -2,44 +2,57 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { User } from "lucide-react"
 import { useRouter } from "next/navigation"
+import type { AuthUser } from "@/types"
+
+const NAV_LINKS = [
+  { href: "/home", label: "Home" },
+  { href: "/articles", label: "Articles" },
+  { href: "/github", label: "Repos" },
+  { href: "/newsletter", label: "Newsletter" },
+  { href: "/about", label: "About Us" },
+] as const;
 
 export default function Navbar() {
-    const [user, setUser] = useState<any>(null)
+    const [user, setUser] = useState<AuthUser | null>(null)
     const [loading, setLoading] = useState(true)
     const [open, setOpen] = useState(false)
-
     const [query, setQuery] = useState("")
     const router = useRouter()
 
-    const handleSearch = () => {
+    const handleSearch = useCallback(() => {
         if (!query.trim()) return
-        router.push(`/search?q=${query}`)
-    }
+        router.push(`/search?q=${encodeURIComponent(query)}`)
+        setQuery("")
+    }, [query, router])
 
-    const handleKeyDown = (e: any) => {
+    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-        handleSearch()
+            handleSearch()
         }
-    }
+    }, [handleSearch])
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("user")
-
-        if (storedUser) {
-            setUser(JSON.parse(storedUser))
+        try {
+            const storedUser = localStorage.getItem("user")
+            if (storedUser) {
+                setUser(JSON.parse(storedUser))
+            }
+        } catch (error) {
+            console.error("Failed to parse user from storage", error)
+        } finally {
+            setLoading(false)
         }
+    }, [])
 
-        setLoading(false)
-        }, [])
-
-    const handleLogout = () => {
+    const handleLogout = useCallback(() => {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
-        window.location.reload()
-    }
+        setUser(null)
+        router.push("/login")
+    }, [router])
 
     return (
         <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0B1120]/70 border-b border-white/10 flex items-center justify-between px-10 md:px-16 py-4">
@@ -57,11 +70,15 @@ export default function Navbar() {
 
             {/* Navigation */}
             <nav className="hidden md:flex gap-8 text-gray-300 items-center">
-                <Link href="/home" className="hover:text-white transition">Home</Link>
-                <Link href="/articles" className="hover:text-white transition">Articles</Link>
-                <Link href="/github" className="hover:text-white transition">Repos</Link>
-                <Link href="/newsletter" className="hover:text-white transition">Newsletter</Link>
-                <Link href="/about" className="hover:text-white transition">About Us</Link>
+                {NAV_LINKS.map((link) => (
+                    <Link
+                        key={link.href}
+                        href={link.href}
+                        className="hover:text-white transition"
+                    >
+                        {link.label}
+                    </Link>
+                ))}
             </nav>
 
             {/* Right side */}
