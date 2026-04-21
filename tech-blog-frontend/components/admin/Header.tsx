@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/api";
 import { authService } from "@/services/auth.service";
@@ -32,37 +33,18 @@ export default function Header() {
     >
       {/* Logo */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <div
-          style={{
-            width: "32px",
-            height: "32px",
-            background: "linear-gradient(135deg, #7c3aed, #22d3ee)",
-            borderRadius: "8px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" fill="none" />
-          </svg>
-        </div>
-        <span
-          style={{
-            color: "white",
-            fontWeight: 700,
-            fontSize: "15px",
-            letterSpacing: "1px",
-          }}
-        >
-          TECH BLOG
-        </span>
+        <Image
+          src="/unofficial_logo.png"
+          alt="Tech Blog Logo"
+          width={40}
+          height={40}
+          className="h-10 w-auto object-contain"
+          style={{ width: "auto" }}
+        />
       </div>
-
 
       {/* Right */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div style={{ textAlign: "right" }}>
             <div style={{ color: "white", fontSize: "12px", fontWeight: 600 }}>
@@ -103,7 +85,14 @@ export default function Header() {
               gap: "6px",
             }}
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />

@@ -65,9 +65,10 @@ export default async function ArticlesPage() {
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {featured.map((article: any) => (
-                <div
+                <Link
                     key={article.id}
-                    className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 
+                    href={`/articles/${article.id}`}
+                    className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10
                             rounded-2xl p-6 flex flex-col justify-between min-h-[240px]
                             hover:scale-[1.02] hover:border-purple-400/30 transition"
                 >
@@ -101,16 +102,10 @@ export default async function ArticlesPage() {
                             new Date(article.publishedAt).toLocaleDateString()}
                         </span>
 
-                        {/* BUTTON */}
-                        <Link
-                            href={`/articles/${article.id}`}
-                            className="text-sm text-purple-400 hover:underline"
-                        >
-                            Read →
-                    </Link>
+                        <span className="text-sm text-purple-400">Read →</span>
 
                     </div>
-                </div>
+                </Link>
                 ))}
             </div>
         </section>

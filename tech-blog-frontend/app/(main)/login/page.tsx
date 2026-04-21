@@ -14,7 +14,8 @@ export default function LoginPage() {
   // const [error, setError] = useState("")
   const [error, setError] = useState<string | string[]>("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     try {
       const res = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
@@ -93,6 +94,7 @@ export default function LoginPage() {
               Access your personalized tech news feed
             </p>
 
+            <form onSubmit={handleLogin}>
             {/* EMAIL */}
             <div className="flex items-center border-b border-white/20 mb-5 focus-within:border-purple-500 transition">
               <Mail size={18} className="text-gray-400 mr-3" />
@@ -119,11 +121,12 @@ export default function LoginPage() {
 
             {/* BUTTON */}
             <button
-              onClick={handleLogin}
+              type="submit"
               className="w-full py-4 rounded-full bg-linear-to-r from-purple-500 to-indigo-500 transition duration-300 hover:opacity-90 hover:-translate-y-0.5 font-medium text-black"
             >
               Sign In
             </button>
+            </form>
 
             {/* REGISTER LINK */}
             <p className="text-gray-400 text-sm mt-6 text-center">

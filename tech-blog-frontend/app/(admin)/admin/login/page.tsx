@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { authService } from "@/services/auth.service";
 
 export default function AdminLoginPage() {
@@ -69,40 +70,14 @@ export default function AdminLoginPage() {
         }}
       >
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <div
-            style={{
-              width: "56px",
-              height: "56px",
-              background: "linear-gradient(135deg, #7c3aed, #22d3ee)",
-              borderRadius: "14px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "0 auto 16px",
-            }}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="white"
-              strokeWidth="2"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-            </svg>
-          </div>
-          <h1
-            style={{
-              color: "white",
-              fontSize: "22px",
-              fontWeight: 700,
-              margin: 0,
-              letterSpacing: "1px",
-            }}
-          >
-            TECH BLOG
-          </h1>
+          <Image
+            src="/unofficial_logo.png"
+            alt="Tech Blog Logo"
+            width={140}
+            height={140}
+            className="h-10 w-auto object-contain"
+            style={{ width: "auto" }}
+          />
           <p style={{ color: "#6b7280", fontSize: "13px", margin: "6px 0 0" }}>
             Core Control System · Admin Access
           </p>
