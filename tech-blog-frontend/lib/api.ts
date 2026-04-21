@@ -1,5 +1,9 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
+type ErrorResponse = {
+  message?: string;
+};
+
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("token");
@@ -21,12 +25,20 @@ export function setUser(user: object): void {
 export function getUser() {
   if (typeof window === "undefined") return null;
   const u = localStorage.getItem("user");
-  return u ? JSON.parse(u) : null;
+  if (!u) return null;
+
+  try {
+    return JSON.parse(u);
+  } catch {
+    // Reset corrupted user cache so protected routes can recover cleanly.
+    localStorage.removeItem("user");
+    return null;
+  }
 }
 
 async function request<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> {
   const token = getToken();
 
@@ -41,13 +53,37 @@ async function request<T>(
     headers,
   });
 
-  const data = await res.json();
+  const contentType = res.headers.get("content-type") || "";
+  const isJson = contentType.includes("application/json");
+  const rawBody = await res.text();
 
-  if (!res.ok) {
-    throw new Error(data.message || "Something went wrong");
+  let data: T | ErrorResponse = {};
+  if (rawBody && isJson) {
+    try {
+      data = JSON.parse(rawBody) as T | ErrorResponse;
+    } catch {
+      data = { message: "Server returned invalid JSON" };
+    }
+  } else if (rawBody) {
+    data = { message: rawBody };
   }
 
-  return data;
+  if (!res.ok) {
+    const message =
+      (data as ErrorResponse).message ||
+      `Request failed with status ${res.status}`;
+    throw new Error(message);
+  }
+
+  if (!rawBody) {
+    return {} as T;
+  }
+
+  if (!isJson) {
+    throw new Error("Unexpected non-JSON response from API");
+  }
+
+  return data as T;
 }
 
 export const api = {
