@@ -1,31 +1,66 @@
-import axios from "axios";
+import { prisma } from "../config/prisma.js";
+
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+// Cache descriptions in memory — persists for the lifetime of the process
+const descCache = new Map<string, string | null>();
+
+async function fetchGithubDescription(repoPath: string): Promise<string | null> {
+  if (descCache.has(repoPath)) return descCache.get(repoPath)!;
+
+  try {
+    const apiUrl = `https://api.github.com/repos/${repoPath}`;
+    const headers: Record<string, string> = {
+      Accept: "application/vnd.github.v3+json",
+    };
+    if (GITHUB_TOKEN) headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
+
+    const res = await fetch(apiUrl, { headers });
+    if (!res.ok) return null; // don't cache failures so it retries on next request
+
+    const data = (await res.json()) as { description?: string | null };
+    const desc = data.description ?? null;
+    descCache.set(repoPath, desc); // only cache successes
+    return desc;
+  } catch {
+    return null;
+  }
+}
+
+function extractRepoPath(url: string): string | null {
+  const match = url.match(/github\.com\/([^/]+\/[^/?#]+)/);
+  return match ? match[1].replace(/\.git$/, "") : null;
+}
 
 export const getTrendingRepos = async () => {
-  const lastWeek = new Date(Date.now() - 7 * 86400000)
-    .toISOString()
-    .split("T")[0];
-
-  const { data } = await axios.get(
-    "https://api.github.com/search/repositories",
-    {
-      params: {
-        q: `created:>${lastWeek}`,
-        sort: "stars",
-        order: "desc",
-        per_page: 10,
-      },
-      headers: {
-        Authorization: `token ${process.env.GITHUB_TOKEN}`,
-        Accept: "application/vnd.github.v3+json",
-      },
+  const repos = await prisma.news_articles_automation.findMany({
+    where: {
+      link: { not: null },
+      OR: [
+        { total_stars: { not: null } },
+        { stars_today: { not: null } },
+      ],
     },
-  );
+    orderBy: [
+      { stars_today: { sort: "desc", nulls: "last" } },
+      { total_stars: { sort: "desc", nulls: "last" } },
+    ],
+    take: 10,
+  });
 
-  return data.items.map((r: any) => ({
-    name: r.full_name,
-    url: r.html_url,
-    stars: r.stargazers_count,
-    description: r.description,
-    publishedAt: r.created_at,
-  }));
+  return Promise.all(
+    repos.map(async (r) => {
+      const repoPath = r.link ? extractRepoPath(r.link) : null;
+      const description = repoPath ? await fetchGithubDescription(repoPath) : null;
+
+      return {
+        name: r.title ?? "Unknown",
+        url: r.link ?? "#",
+        stars: r.total_stars ?? 0,
+        description,
+        publishedAt: r.date ?? r.created_at ?? new Date(),
+        language: r.language,
+      };
+    })
+  );
 };

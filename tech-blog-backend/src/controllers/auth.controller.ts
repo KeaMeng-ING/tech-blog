@@ -15,6 +15,12 @@ export const register = async (req: Request, res: Response) => {
   });
 
   const token = signToken({ id: user.id, role: user.role });
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
   success(
     res,
     { token, user: { id: user.id, email: user.email, role: user.role } },
@@ -31,7 +37,12 @@ export const login = async (req: Request, res: Response) => {
 
   if (user.isDisabled) return error(res, "Account disabled", 403);
   const token = signToken({ id: user.id, role: user.role });
-
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
   success(res, {
     token,
     user: { id: user.id, email: user.email, role: user.role },

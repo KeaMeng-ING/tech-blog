@@ -189,7 +189,7 @@ export default function PostsPage() {
                   <td style={{ padding: "16px" }}>
                     <div style={{ display: "flex", gap: "8px" }}>
                       <Link
-                        href={`/admin/posts/create?edit=${post.id}`}
+                        href={`/admin/create?edit=${post.id}`}
                         style={{ color: "#9ca3af", background: "none", border: "none", cursor: "pointer", padding: "4px" }}
                       >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

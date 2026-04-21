@@ -1,42 +1,54 @@
-import Link from "next/link"
+"use client";
 
-async function getArticle(id: string) {
-  const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
-    cache: "no-store",
-  })
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-  if (!res.ok) return null
-
-  const data = await res.json()
-  return data.data
+interface Article {
+  title: string;
+  content: string;
+  publishedAt?: string;
+  category?: { name: string };
 }
 
-export default async function ArticleDetail({
+export default function ArticleDetail({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = await params
-  const article = await getArticle(id)
+  const router = useRouter();
+  const [article, setArticle] = useState<Article | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+
+    params.then(({ id }) => {
+      fetch(`http://localhost:3000/api/posts/${id}`, { cache: "no-store" })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => setArticle(data?.data ?? null))
+        .finally(() => setLoading(false));
+    });
+  }, [params, router]);
+
+  if (loading) return null;
 
   if (!article) {
-    return <div className="p-10 text-gray-400">Article not found</div>
+    return <div className="p-10 text-gray-400">Article not found</div>;
   }
 
   return (
     <div className="px-10 md:px-20 py-12 max-w-4xl mx-auto">
-
-      {/* BACK */}
       <Link href="/articles" className="text-purple-400 text-sm mb-6 inline-block">
         ← Back to Articles
       </Link>
 
-      {/* TITLE */}
-      <h1 className="text-3xl md:text-5xl font-heading mb-4">
-        {article.title}
-      </h1>
+      <h1 className="text-3xl md:text-5xl font-heading mb-4">{article.title}</h1>
 
-      {/* META */}
       <div className="text-gray-400 text-sm mb-8">
         {article.category?.name}
         {article.category && article.publishedAt && " • "}
@@ -44,11 +56,9 @@ export default async function ArticleDetail({
           new Date(article.publishedAt).toLocaleDateString()}
       </div>
 
-      {/* CONTENT */}
       <div className="text-gray-300 leading-relaxed whitespace-pre-line">
         {article.content}
       </div>
-
     </div>
-  )
+  );
 }

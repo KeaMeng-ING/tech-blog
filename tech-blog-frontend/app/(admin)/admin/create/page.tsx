@@ -68,7 +68,9 @@ function CreatePostForm() {
           thumbnailUrl: post.thumbnailUrl || "",
           source: post.source || "",
           status: post.status,
-          scheduledAt: post.scheduledAt || "",
+          scheduledAt: post.scheduledAt
+            ? new Date(post.scheduledAt).toISOString().slice(0, 16)
+            : "",
           categoryId: post.category?.id || "",
         });
       });
@@ -80,10 +82,13 @@ function CreatePostForm() {
     setForm((f) => ({ ...f, title, slug }));
   };
 
+  const toISO = (val: string): string | undefined =>
+    val ? new Date(val).toISOString() : undefined;
+
   const handleSaveDraft = async () => {
     setLoading(true);
     try {
-      const data = { ...form, status: "DRAFT" as PostStatus };
+      const data = { ...form, status: "DRAFT" as PostStatus, scheduledAt: toISO(form.scheduledAt ?? "") };
       if (editId) await postsService.update(editId, data);
       else await postsService.create(data);
       router.push("/admin/posts");
@@ -94,15 +99,33 @@ function CreatePostForm() {
     }
   };
 
-  const handlePublish = async () => {
+  const handlePublishNow = async () => {
     setLoading(true);
     try {
-      const data = { ...form, status: (form.scheduledAt ? "SCHEDULED" : "PUBLISHED") as PostStatus };
+      const data = { ...form, status: "PUBLISHED" as PostStatus, scheduledAt: undefined };
       if (editId) await postsService.update(editId, data);
       else await postsService.create(data);
       router.push("/admin/posts");
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Error publishing post");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSchedule = async () => {
+    if (!form.scheduledAt) {
+      alert("Please set a schedule date first.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = { ...form, status: "SCHEDULED" as PostStatus, scheduledAt: toISO(form.scheduledAt ?? "") };
+      if (editId) await postsService.update(editId, data);
+      else await postsService.create(data);
+      router.push("/admin/posts");
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Error scheduling post");
     } finally {
       setLoading(false);
     }
@@ -159,10 +182,10 @@ function CreatePostForm() {
             Save Draft
           </button>
           <button
-            onClick={handlePublish}
+            onClick={handlePublishNow}
             disabled={loading}
             style={{
-              background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+              background: "linear-gradient(135deg, #059669, #047857)",
               border: "none",
               borderRadius: "8px",
               padding: "10px 20px",
@@ -172,7 +195,25 @@ function CreatePostForm() {
               cursor: loading ? "not-allowed" : "pointer",
             }}
           >
-            {form.scheduledAt ? "Schedule Post" : "Publish Post"}
+            Publish Now
+          </button>
+          <button
+            onClick={handleSchedule}
+            disabled={loading}
+            style={{
+              background: form.scheduledAt
+                ? "linear-gradient(135deg, #7c3aed, #4f46e5)"
+                : "#1e1e35",
+              border: "none",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              color: form.scheduledAt ? "white" : "#6b7280",
+              fontSize: "14px",
+              fontWeight: 600,
+              cursor: loading ? "not-allowed" : "pointer",
+            }}
+          >
+            Schedule Post
           </button>
         </div>
       </div>

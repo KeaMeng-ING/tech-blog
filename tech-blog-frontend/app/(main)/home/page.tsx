@@ -1,44 +1,46 @@
-import Image from "next/image"
-import Link from "next/link"
-import { ChevronDown } from "lucide-react"
+import Image from "next/image";
+import Link from "next/link";
 
 async function getTrendingRepos() {
-  const res = await fetch("http://localhost:3000/api/github/trending", {
-    cache: "no-store",
-  })
-
-  const json = await res.json()
-  return json.data
+  try {
+    const res = await fetch("http://localhost:3000/api/github/trending", {
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data ?? [];
+  } catch {
+    return [];
+  }
 }
 
 async function getLatestNews() {
-  const res = await fetch("http://localhost:3000/api/news-automation", {
-    cache: "no-store",
-  })
-
-  const data = await res.json()
-  return data.data || []
+  try {
+    const res = await fetch("http://localhost:3000/api/news-automation", {
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data || [];
+  } catch {
+    return [];
+  }
 }
 
 export default async function Home() {
+  const repos = await getTrendingRepos();
+  const news = await getLatestNews();
 
-  const repos = await getTrendingRepos()
-  const news = await getLatestNews()
-
-  const featured = repos[0]
-  const others = repos.slice(1, 5)
-  const latestNews = news.slice(0,6)
+  const featured = repos[0];
+  const others = repos.slice(1, 5);
+  const latestNews = news.slice(0, 6);
 
   return (
-
     <main className="min-h-screen bg-[#0B0F19] text-white">
-
       {/* ╭┈➤ HERO SECTION */}
       <section className="grid md:grid-cols-[1.4fr_1fr] gap-12 px-12 md:px-20 py-16 items-stretch">
-
         {/* LEFT: Llama Image */}
-        <div className="relative w-full h-[600px] md:h-[400px] rounded-2xl overflow-hidden">
-
+        <div className="relative w-full h-150 md:h-100 rounded-2xl overflow-hidden">
           {/* Glow (behind) */}
           <div className="absolute -inset-10 bg-purple-600/30 blur-[120px] opacity-30 z-0"></div>
 
@@ -49,7 +51,6 @@ export default async function Home() {
             fill
             className="object-cover relative z-10"
           />
-
         </div>
 
         {/* RIGHT: Content */}
@@ -58,9 +59,7 @@ export default async function Home() {
             BREAKING NEWS
           </span>
 
-          <p className="text-gray-400 mt-2 text-sm">
-            Source: Meta AI
-          </p>
+          <p className="text-gray-400 mt-2 text-sm">Source: Meta AI</p>
 
           <h1
             className="text-3xl md:text-5xl font-bold leading-[1.15]"
@@ -72,8 +71,8 @@ export default async function Home() {
           </h1>
           <p className="text-gray-400 mt-5 text-lg max-w-xl">
             Meta's latest architectural shift introduces self-correcting
-            reasoning loops that outperform traditional transformer
-            models by 40%. The era of passive Artificial Intelligence is over.
+            reasoning loops that outperform traditional transformer models by
+            40%. The era of passive Artificial Intelligence is over.
           </p>
 
           {/* Buttons */}
@@ -91,104 +90,92 @@ export default async function Home() {
         </div>
       </section>
 
-
       {/* ╭┈➤ GITHUB REPOS */}
-      <section className="px-10 md:px-20 py-20">
-
-        {/* Header */}
-        <div className="mb-12">
-          <h2
-            className="text-2xl md:text-3xl font-bold"
-            style={{ fontFamily: "var(--font-space)" }}
-          >
-            Trending Repositories
-          </h2>
-          <p className="text-gray-400 text-sm mt-1 tracking-wide">
-            THE GITHUB PULSE
-          </p>
-        </div>
-
-        {/* Grid */}
-        <div className="grid md:grid-cols-2 gap-8 ">
-
-          {/* Left: Featured Column */}
-          <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-3xl p-8 border border-white/10 hover:border-white/20 hover:-translate-y-1 transition duration-300 cursor-pointer">
-
-            <div className="flex justify-between items-center mb-6">
-              <div className="text-purple-400 text-2xl">⚡️</div>
-              <span className="text-sm text-gray-300">
-                ⭐ {featured.stars.toLocaleString()}
-              </span>
-            </div>
-
-            <h3 className="text-2xl font-semibold mb-3">
-              {featured.name}
-            </h3>
-
-            <p className="text-gray-400 mb-6">
-              {featured.description}
-            </p>
-
-            <div className="flex gap-2 mb-6">
-              <span className="text-xs bg-white/10 px-3 py-1 rounded-full">
-                React
-              </span>
-              <span className="text-xs bg-white/10 px-3 py-1 rounded-full">
-                TypeScript
-              </span>
-            </div>
-
-            <a
-              href={featured.url}
-              target="_blank"
-              className="block text-center bg-purple-500 hover:bg-purple-600 transition py-4 rounded-full font-medium"
+      {featured && (
+        <section className="px-10 md:px-20 py-20">
+          {/* Header */}
+          <div className="mb-12">
+            <h2
+              className="text-2xl md:text-3xl font-bold"
+              style={{ fontFamily: "var(--font-space)" }}
             >
-              View Repository
-            </a>
+              Trending Repositories
+            </h2>
+            <p className="text-gray-400 text-sm mt-1 tracking-wide">
+              THE GITHUB PULSE
+            </p>
           </div>
 
-          {/* Right: List Column */}
-          <div className="grid grid-cols-2 gap-6">
+          {/* Grid */}
+          <div className="grid md:grid-cols-2 gap-8 ">
+            {/* Left: Featured Column */}
+            <div className="bg-linear-to-br from-white/10 to-white/5 rounded-3xl p-8 border border-white/10 hover:border-white/20 hover:-translate-y-1 transition duration-300 cursor-pointer">
+              <div className="flex justify-between items-center mb-6">
+                <div className="text-purple-400 text-2xl">⚡️</div>
+                <span className="text-sm text-gray-300">
+                  ⭐ {featured.stars.toLocaleString()}
+                </span>
+              </div>
 
-            {others.map((repo: any, index: number) => (
+              <h3 className="text-2xl font-semibold mb-3">{featured.name}</h3>
+
+              <p className="text-gray-400 mb-6">{featured.description}</p>
+
+              <div className="flex gap-2 mb-6">
+                <span className="text-xs bg-white/10 px-3 py-1 rounded-full">
+                  React
+                </span>
+                <span className="text-xs bg-white/10 px-3 py-1 rounded-full">
+                  TypeScript
+                </span>
+              </div>
+
               <a
-                key={repo.name}
-                href={repo.url}
+                href={featured.url}
                 target="_blank"
-                rel="noopener noreferrer"
-                className="block"
+                className="block text-center bg-purple-500 hover:bg-purple-600 transition py-4 rounded-full font-medium"
               >
-                <div className="bg-[#0F172A] rounded-2xl p-5 border border-white/5 hover:border-white/10 hover:-translate-y-1 transition cursor-pointer h-[200px] flex flex-col justify-between">
-
-                  <div className="flex justify-between text-xs text-gray-400 mb-3">
-                    <span>#{index + 2}</span>
-                    <span>⭐ {repo.stars.toLocaleString()}</span>
-                  </div>
-
-                  <h4 className="font-semibold mb-2 group-hover:text-purple-400 transition">
-                    {repo.name}
-                  </h4>
-
-                  <p className="text-gray-400 text-sm mb-3 line-clamp-2">
-                    {repo.description}
-                  </p>
-
-                  <span className="text-xs text-purple-400">
-                    {repo.publishedAt}
-                  </span>
-                </div>
+                View Repository
               </a>
-            ))}
+            </div>
 
+            {/* Right: List Column */}
+            <div className="grid grid-cols-2 gap-6">
+              {others.map((repo: any, index: number) => (
+                <a
+                  key={repo.name}
+                  href={repo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <div className="bg-[#0F172A] rounded-2xl p-5 border border-white/5 hover:border-white/10 hover:-translate-y-1 transition cursor-pointer h-50 flex flex-col justify-between">
+                    <div className="flex justify-between text-xs text-gray-400 mb-3">
+                      <span>#{index + 2}</span>
+                      <span>⭐ {repo.stars.toLocaleString()}</span>
+                    </div>
+
+                    <h4 className="font-semibold mb-2 group-hover:text-purple-400 transition">
+                      {repo.name}
+                    </h4>
+
+                    <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                      {repo.description}
+                    </p>
+
+                    <span className="text-xs text-purple-400">
+                      {repo.publishedAt}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
-
-      </section>
-
+        </section>
+      )}
 
       {/* ╭┈➤ LATEST NEWS PREVIEW */}
       <section className="mt-20 px-10 md:px-16">
-
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-4xl font-heading font-bold">Latest News</h2>
@@ -203,24 +190,21 @@ export default async function Home() {
 
         {/* Grid 3 each, 2 rows */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
           {latestNews.map((article: any) => (
             <div
               key={article.id}
-              className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 
+              className="bg-linear-to-br from-white/5 to-white/0 border border-white/10 
                         rounded-2xl overflow-hidden flex flex-col
                         hover:scale-[1.02] hover:border-blue-400/30 transition"
             >
-
               {/* Image */}
               <img
                 src={article.image || "/news-placeholder-home.jpg"}
                 alt={article.title}
-                className="w-full h-[160px] object-cover"
+                className="w-full h-40 object-cover"
               />
 
               <div className="p-5 flex flex-col justify-between flex-1">
-
                 {/* Meta */}
                 <div className="text-xs text-gray-400 mb-2">
                   {article.source}
@@ -240,9 +224,7 @@ export default async function Home() {
 
                 {/* Preview */}
                 <p className="text-gray-400 text-sm line-clamp-3">
-                  {article.content
-                    ?.replace(/<[^>]+>/g, "")
-                    .slice(0, 100)}
+                  {article.content?.replace(/<[^>]+>/g, "").slice(0, 100)}
                   ...
                 </p>
 
@@ -253,24 +235,21 @@ export default async function Home() {
                 >
                   Read →
                 </Link>
-
               </div>
             </div>
           ))}
-
         </div>
       </section>
 
-
       {/* ╭┈➤ NEWSLETTER */}
       <section className="px-10 md:px-20 py-20">
-
-        <div className="rounded-3xl 
-                        bg-gradient-to-r from-black-500 via-indigo-400 to-black-500
+        <div
+          className="rounded-3xl 
+                        bg-linear-to-r from-black-500 via-indigo-400 to-black-500
                         border border-white/20
                         shadow-[0_0_80px_rgba(168,85,247,0.25)]
-                        p-10 md:p-16 text-center">
-
+                        p-10 md:p-16 text-center"
+        >
           {/* Title */}
           <h2 className="text-3xl md:text-4xl font-heading font-semibold text-white mb-4">
             Stay Updated with the Latest Tech News!
@@ -278,8 +257,9 @@ export default async function Home() {
 
           {/* Subtitle */}
           <p className="text-white/80 max-w-2xl mx-auto mb-8 text-sm md:text-base">
-            Subscribe to our newsletter and get daily updates on AI, Cloud Computing,<br/> Web Development, 
-            and more delivered to your inbox.
+            Subscribe to our newsletter and get daily updates on AI, Cloud
+            Computing,
+            <br /> Web Development, and more delivered to your inbox.
           </p>
 
           {/* Subscribe Button */}
@@ -291,11 +271,8 @@ export default async function Home() {
           >
             Subscribe Now →
           </a>
-
         </div>
-
       </section>
-
     </main>
-  )
+  );
 }
