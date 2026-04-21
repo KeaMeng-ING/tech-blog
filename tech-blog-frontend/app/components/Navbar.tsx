@@ -38,16 +38,21 @@ export default function Navbar() {
   );
 
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+    const readUser = () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        setUser(storedUser ? JSON.parse(storedUser) : null);
+      } catch (error) {
+        console.error("Failed to parse user from storage", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to parse user from storage", error);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    readUser();
+    window.addEventListener("authChange", readUser);
+    return () => window.removeEventListener("authChange", readUser);
   }, []);
 
   const handleLogout = useCallback(() => {
