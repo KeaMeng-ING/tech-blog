@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch src --ext ts --exec \"tsx src/app.ts\""
+    "dev": "nodemon --watch src --watch .env --ext ts,env --exec \"tsx src/app.ts\""
   },
   "keywords": [],
   "author": "",

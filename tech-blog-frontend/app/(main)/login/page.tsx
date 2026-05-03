@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Mail, Lock } from "lucide-react";
@@ -13,6 +13,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   // const [error, setError] = useState("")
   const [error, setError] = useState<string | string[]>("");
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      router.replace("/home");
+    }
+  }, [router]);
 
   const handleLogin = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -95,37 +101,37 @@ export default function LoginPage() {
             </p>
 
             <form onSubmit={handleLogin}>
-            {/* EMAIL */}
-            <div className="flex items-center border-b border-white/20 mb-5 focus-within:border-purple-500 transition">
-              <Mail size={18} className="text-gray-400 mr-3" />
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="w-full bg-transparent py-3 focus:outline-none"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+              {/* EMAIL */}
+              <div className="flex items-center border-b border-white/20 mb-5 focus-within:border-purple-500 transition">
+                <Mail size={18} className="text-gray-400 mr-3" />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  className="w-full bg-transparent py-3 focus:outline-none"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
 
-            {/* PASSWORD */}
-            <div className="flex items-center border-b border-white/20 mb-8 focus-within:border-purple-500 transition">
-              <Lock size={18} className="text-gray-400 mr-3" />
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full bg-transparent py-3 focus:outline-none"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+              {/* PASSWORD */}
+              <div className="flex items-center border-b border-white/20 mb-8 focus-within:border-purple-500 transition">
+                <Lock size={18} className="text-gray-400 mr-3" />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full bg-transparent py-3 focus:outline-none"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
-            {/* BUTTON */}
-            <button
-              type="submit"
-              className="w-full py-4 rounded-full bg-linear-to-r from-purple-500 to-indigo-500 transition duration-300 hover:opacity-90 hover:-translate-y-0.5 font-medium text-black"
-            >
-              Sign In
-            </button>
+              {/* BUTTON */}
+              <button
+                type="submit"
+                className="w-full py-4 rounded-full bg-linear-to-r from-purple-500 to-indigo-500 transition duration-300 hover:opacity-90 hover:-translate-y-0.5 font-medium text-black"
+              >
+                Sign In
+              </button>
             </form>
 
             {/* REGISTER LINK */}

@@ -16,10 +16,11 @@ return (
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {news.slice(0, visible).map((article: any) => (
-            <div
+            <Link
                 key={article.id}
-                className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 
-                        rounded-2xl overflow-hidden flex flex-col
+                href={`/news/${article.id}`}
+                className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10
+                        rounded-2xl overflow-hidden flex flex-col cursor-pointer
                         hover:scale-[1.02] hover:border-blue-400/30 transition"
             >
 
@@ -57,15 +58,11 @@ return (
                     ...
                 </p>
 
-                {/* BUTTON */}
-                <Link
-                    href={`/news/${article.id}`}
-                    className="mt-5 text-sm text-blue-400 hover:underline"
-                >
+                <span className="mt-5 text-sm text-blue-400">
                     Read →
-                </Link>
+                </span>
                 </div>
-            </div>
+            </Link>
             ))}
         </div>
 
