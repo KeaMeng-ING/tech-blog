@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch src --watch .env --ext ts,env --exec \"tsx src/app.ts\""
+    "dev": "nodemon --watch src --watch .env --ext ts,env --exec \"tsx src/app.ts\"",
+    "build": "prisma generate",
+    "start": "tsx src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +24,9 @@
     "nodemailer": "^8.0.1",
     "nodemon": "^3.1.14",
     "pg": "^8.20.0",
+    "dotenv": "^17.4.2",
     "rss-parser": "^3.13.0",
+    "tsx": "^4.21.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -31,8 +35,7 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/nodemailer": "^7.0.11",
-    "dotenv": "^17.4.2",
     "prisma": "^7.4.2",
-    "tsx": "^4.21.0"
+    "typescript": "^5.0.0"
   }
 }
