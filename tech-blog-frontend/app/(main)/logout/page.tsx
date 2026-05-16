@@ -8,7 +8,7 @@ export default function LogoutPage() {
       try {
         const token = localStorage.getItem("token");
 
-        await fetch("http://localhost:3000/api/auth/logout", {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"}/auth/logout`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,

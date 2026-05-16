@@ -1,7 +1,9 @@
 import Link from "next/link"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+
 async function getArticle(id: string) {
-    const res = await fetch(`http://localhost:3000/api/news-automation/${id}`, {
+    const res = await fetch(`${API}/news-automation/${id}`, {
         cache: "no-store",
     })
 

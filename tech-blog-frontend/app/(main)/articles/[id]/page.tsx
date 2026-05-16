@@ -28,7 +28,7 @@ export default function ArticleDetail({
     }
 
     params.then(({ id }) => {
-      fetch(`http://localhost:3000/api/posts/${id}`, { cache: "no-store" })
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"}/posts/${id}`, { cache: "no-store" })
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => setArticle(data?.data ?? null))
         .finally(() => setLoading(false));

@@ -4,8 +4,8 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
+    user: process.env.BLOG_GMAIL_USER,
+    pass: process.env.BLOG_GMAIL_APP_PASSWORD,
   },
 });
 
@@ -25,7 +25,7 @@ export const sendNewsletter = async (to: string, posts: any[]) => {
       .join("")}
   `;
   await transporter.sendMail({
-    from: process.env.GMAIL_USER,
+    from: process.env.BLOG_GMAIL_USER,
     to,
     subject: "Your Daily Tech Digest",
     html,
