@@ -12,10 +12,10 @@ import newsAutomationRouter from "./routes/newsAutomation.routes.js";
 import { startNewsFetcherJob } from "./jobs/newsFetcher.job.js";
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.BLOG_PORT || 5000;
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3001",
+  origin: process.env.BLOG_FRONTEND_URL || "http://localhost:3001",
   credentials: true
 }));
 app.use(express.json());

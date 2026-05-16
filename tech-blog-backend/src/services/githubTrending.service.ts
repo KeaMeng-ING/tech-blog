@@ -1,6 +1,6 @@
 import { prisma } from "../config/prisma.js";
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_TOKEN = process.env.BLOG_GITHUB_TOKEN;
 
 interface GitHubRepo {
   full_name: string;

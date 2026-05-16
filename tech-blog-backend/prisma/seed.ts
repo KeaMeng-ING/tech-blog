@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../src/config/prisma.js";
 
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
+  connectionString: process.env.BLOG_DATABASE_URL!,
 });
 
 async function main() {
