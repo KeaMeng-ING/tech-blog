@@ -47,3 +47,13 @@ export const adminService = {
     return res.data;
   },
 };
+
+export const newsService = {
+  async triggerRefresh(): Promise<{ message: string }> {
+    const res = await api.post<{ success: boolean; message: string }>(
+      "/news-automation/trigger",
+      {}
+    );
+    return { message: res.message ?? "Aggregation started" };
+  },
+};
