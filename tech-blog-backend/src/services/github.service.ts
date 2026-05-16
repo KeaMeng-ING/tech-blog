@@ -36,15 +36,9 @@ export const getTrendingRepos = async () => {
   const repos = await prisma.news_articles_automation.findMany({
     where: {
       link: { not: null },
-      OR: [
-        { total_stars: { not: null } },
-        { stars_today: { not: null } },
-      ],
+      total_stars: { not: null },
     },
-    orderBy: [
-      { stars_today: { sort: "desc", nulls: "last" } },
-      { total_stars: { sort: "desc", nulls: "last" } },
-    ],
+    orderBy: { total_stars: { sort: "desc", nulls: "last" } },
     take: 10,
   });
 
