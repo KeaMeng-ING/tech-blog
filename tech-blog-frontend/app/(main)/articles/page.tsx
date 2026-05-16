@@ -1,116 +1,121 @@
-import Link from "next/link"
-import NewsList from "../../components/NewsList"
+import Link from "next/link";
+import NewsList from "../../components/NewsList";
 
 async function getFeatured() {
-    const res = await fetch(
-        "http://localhost:3000/api/posts?status=PUBLISHED&limit=6",
-        { cache: "no-store" }
-    )
-    const data = await res.json()
-    return data.data.posts || []
+  const res = await fetch(
+    "http://localhost:3000/api/posts?status=PUBLISHED&limit=6",
+    { cache: "no-store" },
+  );
+  const data = await res.json();
+  return data.data.posts || [];
 }
 
 async function getNews() {
-    const res = await fetch(
-        "http://localhost:3000/api/news-automation",
-        { cache: "no-store" }
-    )
-    const data = await res.json()
-    return data.data || []
+  const res = await fetch(
+    "http://localhost:3000/api/news-automation?limit=50",
+    { cache: "no-store" },
+  );
+  const data = await res.json();
+  console.log("Fetched news data:", data);
+  return data.data || [];
 }
 
 export default async function ArticlesPage() {
-    const [featured, news] = await Promise.all([
-        getFeatured(),
-        getNews(),
-    ])
+  const [featured, news] = await Promise.all([getFeatured(), getNews()]);
 
-    const shuffledNews = [...news].sort(() => 0.5 - Math.random())
+  const shuffledNews = [...news].sort(() => 0.5 - Math.random());
 
-    return (
-        <div className="px-10 md:px-16 py-10">
+  return (
+    <div className="px-10 md:px-16 py-10">
+      {/* HEADER */}
+      <section className="relative w-full h-105 md:h-130 rounded-2xl overflow-hidden mb-16">
+        <img
+          src="/articles-bg.jpg"
+          alt="Articles"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-[#0B1120] via-[#0B1120]/80 to-transparent" />
 
-        {/* HEADER */}
-        <section className="relative w-full h-105 md:h-130 rounded-2xl overflow-hidden mb-16">
-            <img
-            src="/articles-bg.jpg"
-            alt="Articles"
-            className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-linear-to-r from-[#0B1120] via-[#0B1120]/80 to-transparent" />
+        <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 max-w-3xl">
+          <span className="text-sm text-purple-400 mb-4">
+            TECH INSIGHTS & NEWS
+          </span>
 
-            <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 max-w-3xl">
-            <span className="text-sm text-purple-400 mb-4">
-                TECH INSIGHTS & NEWS
-            </span>
+          <h1 className="text-5xl md:text-6xl font-heading font-bold mb-4">
+            Featured Articles
+            <br /> & <span className="text-purple-400">Latest News</span>
+          </h1>
 
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-4">
-                Featured Articles<br/> & <span className="text-purple-400">Latest News</span>
-            </h1>
+          <p className="text-gray-400">
+            Explore curated articles and automatically updated tech news from
+            around the web.
+          </p>
+        </div>
+      </section>
 
-            <p className="text-gray-400">
-                Explore curated articles and automatically updated tech news from around the web.
-            </p>
-            </div>
-        </section>
-
-        {/* FEATURED ARTICLES */}
-        {featured.length > 0 && (
+      {/* FEATURED ARTICLES */}
+      {featured.length > 0 && (
         <section className="mb-20">
-            <h2 className="text-2xl font-heading font-bold mb-6">Featured Articles</h2>
+          <h2 className="text-2xl font-heading font-bold mb-6">
+            Featured Articles
+          </h2>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {featured.map((article: any) => (
-                <Link
-                    key={article.id}
-                    href={`/articles/${article.id}`}
-                    className="bg-linear-to-br from-white/5 to-white/0 border border-white/10
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featured.map((article: any) => (
+              <Link
+                key={article.id}
+                href={`/articles/${article.id}`}
+                className="bg-linear-to-br from-white/5 to-white/0 border border-white/10
                             rounded-2xl overflow-hidden flex flex-col
                             hover:scale-[1.02] hover:border-purple-400/30 transition"
-                >
-                    {/* IMAGE */}
-                    <img
-                        src={article.thumbnailUrl || "/news-placeholder.jpg"}
-                        alt={article.title}
-                        className="w-full h-44 object-cover"
-                    />
+              >
+                {/* IMAGE */}
+                <img
+                  src={article.thumbnailUrl || "/news-placeholder.jpg"}
+                  alt={article.title}
+                  className="w-full h-44 object-cover"
+                />
 
-                    <div className="p-6 flex flex-col flex-1">
-                        {/* CATEGORY */}
-                        <div className="text-xs text-purple-400 mb-2">
-                            {article.category?.name || "General"}
-                        </div>
+                <div className="p-6 flex flex-col flex-1">
+                  {/* CATEGORY */}
+                  <div className="text-xs text-purple-400 mb-2">
+                    {article.category?.name || "General"}
+                  </div>
 
-                        {/* TITLE */}
-                        <h2 className="text-lg font-semibold text-white mb-2 line-clamp-2">
-                            {article.title}
-                        </h2>
+                  {/* TITLE */}
+                  <h2 className="text-lg font-semibold text-white mb-2 line-clamp-2">
+                    {article.title}
+                  </h2>
 
-                        {/* DESCRIPTION */}
-                        <p className="text-gray-400 text-sm line-clamp-3 flex-1">
-                            {article.shortDesc}
-                        </p>
+                  {/* DESCRIPTION */}
+                  <p className="text-gray-400 text-sm line-clamp-3 flex-1">
+                    {article.shortDesc}
+                  </p>
 
-                        {/* BOTTOM */}
-                        <div className="flex items-center justify-between mt-6">
-                            <span className="text-xs text-gray-500">
-                                {article.publishedAt &&
-                                    new Date(article.publishedAt).toLocaleDateString("en-US", {
-                                        month: "short", day: "numeric", year: "numeric"
-                                    })}
-                            </span>
-                            <span className="text-sm text-purple-400">Read →</span>
-                        </div>
-                    </div>
-                </Link>
-                ))}
-            </div>
+                  {/* BOTTOM */}
+                  <div className="flex items-center justify-between mt-6">
+                    <span className="text-xs text-gray-500">
+                      {article.publishedAt &&
+                        new Date(article.publishedAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          },
+                        )}
+                    </span>
+                    <span className="text-sm text-purple-400">Read →</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </section>
-        )}
+      )}
 
-        {/* LATEST NEWS */}
-        <NewsList news={shuffledNews}/>
-
-        </div>
-    )
+      {/* LATEST NEWS */}
+      <NewsList news={shuffledNews} />
+    </div>
+  );
 }

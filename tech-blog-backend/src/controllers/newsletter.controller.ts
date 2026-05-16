@@ -5,7 +5,7 @@ import { prisma } from "../config/prisma.js";
 
 // GET /api/admin/stats
 export const getDashboardStats = async (_: Request, res: Response) => {
-  const [total, draft, scheduled, published, totalSubs, activeSubs] =
+  const [total, draft, scheduled, published, totalSubs, activeSubs, totalNewsArticles] =
     await Promise.all([
       prisma.post.count(),
       prisma.post.count({ where: { status: "DRAFT" } }),
@@ -13,8 +13,9 @@ export const getDashboardStats = async (_: Request, res: Response) => {
       prisma.post.count({ where: { status: "PUBLISHED" } }),
       prisma.subscription.count(),
       prisma.subscription.count({ where: { isActive: true } }),
+      prisma.news_articles_automation.count(),
     ]);
-  success(res, { total, draft, scheduled, published, totalSubs, activeSubs });
+  success(res, { total, draft, scheduled, published, totalSubs, activeSubs, totalNewsArticles });
 };
 
 // GET /api/admin/newsletter/history
