@@ -1,6 +1,6 @@
 import { prisma } from "../config/prisma.js";
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_TOKEN = process.env.BLOG_GITHUB_TOKEN;
 
 // Cache descriptions in memory — persists for the lifetime of the process
 const descCache = new Map<string, string | null>();

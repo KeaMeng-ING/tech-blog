@@ -37,7 +37,7 @@ export const userAuthorize = async (
     // Verify token
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET as string,
+      process.env.BLOG_JWT_SECRET as string,
     ) as unknown as DecodedToken;
 
     const user = await prisma.user.findUnique({
