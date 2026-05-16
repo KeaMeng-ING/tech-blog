@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { adminService } from "@/services/newsletter.service";
+import { adminService, newsService } from "@/services/newsletter.service";
 import { postsService } from "@/services/posts.service";
 import { DashboardStats, Post } from "@/types";
 
@@ -79,6 +79,8 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [scheduled, setScheduled] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMsg, setRefreshMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -98,6 +100,19 @@ export default function DashboardPage() {
     load();
   }, []);
 
+  const handleRefreshNews = async () => {
+    setRefreshing(true);
+    setRefreshMsg(null);
+    try {
+      const res = await newsService.triggerRefresh();
+      setRefreshMsg(res.message);
+    } catch {
+      setRefreshMsg("Failed to trigger refresh");
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <div>
       <h1 style={{ color: "#a78bfa", fontSize: "36px", fontWeight: 700, margin: "0 0 4px" }}>
@@ -107,6 +122,36 @@ export default function DashboardPage() {
         Operational status:{" "}
         <span style={{ color: "#22d3ee" }}>Optimal</span> | Node: US-EAST-01
       </p>
+
+      {/* Refresh News Button */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
+        <button
+          onClick={handleRefreshNews}
+          disabled={refreshing}
+          style={{
+            background: refreshing ? "#1e1e35" : "rgba(124,58,237,0.15)",
+            border: "1px solid rgba(124,58,237,0.4)",
+            color: refreshing ? "#6b7280" : "#a78bfa",
+            fontSize: "13px",
+            fontWeight: 600,
+            padding: "8px 16px",
+            borderRadius: "8px",
+            cursor: refreshing ? "not-allowed" : "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="23 4 23 10 17 10" />
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+          </svg>
+          {refreshing ? "Fetching…" : "Refresh News Feed"}
+        </button>
+        {refreshMsg && (
+          <span style={{ color: "#22d3ee", fontSize: "12px" }}>{refreshMsg}</span>
+        )}
+      </div>
 
       {/* Stat Cards */}
       <div style={{ display: "flex", gap: "16px", marginBottom: "28px" }}>
@@ -161,6 +206,18 @@ export default function DashboardPage() {
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
               <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          }
+        />
+        <StatCard
+          label="NEWS ARTICLES"
+          value={loading ? "—" : stats?.totalNewsArticles ?? 0}
+          sub="auto-fetched"
+          subColor="#a78bfa"
+          icon={
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
+              <path d="M18 14h-8" /><path d="M15 18h-5" /><path d="M10 6h8v4h-8V6Z" />
             </svg>
           }
         />

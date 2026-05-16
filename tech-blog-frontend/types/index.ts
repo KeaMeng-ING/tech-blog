@@ -90,6 +90,7 @@ export interface DashboardStats {
   published: number;
   totalSubs: number;
   activeSubs: number;
+  totalNewsArticles: number;
 }
 
 export interface ApiResponse<T> {
