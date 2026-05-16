@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+
 async function getTrendingRepos() {
   try {
-    const res = await fetch("http://localhost:3000/api/github/trending", {
-      cache: "no-store",
-    });
+    const res = await fetch(`${API}/github/trending`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return json.data ?? [];
@@ -16,9 +16,7 @@ async function getTrendingRepos() {
 
 async function getLatestNews() {
   try {
-    const res = await fetch("http://localhost:3000/api/news-automation", {
-      cache: "no-store",
-    });
+    const res = await fetch(`${API}/news-automation`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();
     return data.data || [];

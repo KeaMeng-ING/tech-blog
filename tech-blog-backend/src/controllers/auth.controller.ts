@@ -17,7 +17,7 @@ export const register = async (req: Request, res: Response) => {
   const token = signToken({ id: user.id, role: user.role });
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.BLOG_NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
@@ -39,7 +39,7 @@ export const login = async (req: Request, res: Response) => {
   const token = signToken({ id: user.id, role: user.role });
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.BLOG_NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
@@ -57,7 +57,7 @@ export const logout = async (
   try {
     res.cookie("jwt", "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Only sends over HTTPS in production
+      secure: process.env.BLOG_NODE_ENV === "production", // Only sends over HTTPS in production
       sameSite: "strict", // Protects against CSRF attacks
       path: "/", // Ensure it clears for the whole domain
       expires: new Date(0), // Set the cookie to expire
