@@ -1,14 +1,19 @@
 import Link from "next/link"
 
-// Note: the search results fetch from news_articles_automation table (or latest news section)
-async function getSearchResults(query: string) {
-  const res = await fetch(
-    `http://localhost:3000/api/news-automation/search?search=${query}`,
-    { cache: "no-store" }
-  )
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
-  const data = await res.json()
-  return data.data || []
+async function getSearchResults(query: string) {
+  try {
+    const res = await fetch(
+      `${API}/news-automation/search?search=${encodeURIComponent(query)}`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data || [];
+  } catch {
+    return [];
+  }
 }
 
 export default async function SearchPage({

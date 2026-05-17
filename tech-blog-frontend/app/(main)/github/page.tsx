@@ -1,10 +1,10 @@
 import Link from "next/link";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+
 async function getTrendingRepos() {
   try {
-    const res = await fetch("http://localhost:3000/api/github/trending", {
-      cache: "no-store",
-    });
+    const res = await fetch(`${API}/github/trending`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return json.data ?? [];
