@@ -1,23 +1,32 @@
 import Link from "next/link";
 import NewsList from "../../components/NewsList";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+
 async function getFeatured() {
-  const res = await fetch(
-    "http://localhost:3000/api/posts?status=PUBLISHED&limit=6",
-    { cache: "no-store" },
-  );
-  const data = await res.json();
-  return data.data.posts || [];
+  try {
+    const res = await fetch(`${API}/posts?status=PUBLISHED&limit=6`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data.posts || [];
+  } catch {
+    return [];
+  }
 }
 
 async function getNews() {
-  const res = await fetch(
-    "http://localhost:3000/api/news-automation?limit=50",
-    { cache: "no-store" },
-  );
-  const data = await res.json();
-  console.log("Fetched news data:", data);
-  return data.data || [];
+  try {
+    const res = await fetch(`${API}/news-automation?limit=50`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data || [];
+  } catch {
+    return [];
+  }
 }
 
 export default async function ArticlesPage() {

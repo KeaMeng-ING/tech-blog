@@ -31,7 +31,7 @@ export default function NewsletterPage() {
         return
       }
 
-      const res = await fetch("http://localhost:3000/api/subscription", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"}/subscription`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
